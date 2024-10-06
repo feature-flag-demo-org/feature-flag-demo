@@ -49,7 +49,7 @@ jobs:
     uses: ./.github/workflows/test.yaml
     secrets: inherit
 
-  deploy-to-staging:
+  deploy-to-development:
     permissions:
       pull-requests: write
       id-token: write

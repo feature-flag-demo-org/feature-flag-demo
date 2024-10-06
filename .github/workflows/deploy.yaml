@@ -96,7 +96,7 @@ jobs:
 
       - name: Create AWS Elastic Beanstalk environment
         if: steps.get-eb-env-name.outputs.aws_env == 'None' || steps.get-eb-env-status.outputs.aws_env_status == 'Terminated'
-        run: eb create ${{ github.event.inputs.aws-env }} --instance-types ${{ vars.AWS_EB_ENV_INSTANCE_TYPES }} --cname ${{ github.event.inputs.aws-env }} --envvars FLAGSMITH_SERVER_KEY=${{ secrets.FLAGSMITH_SERVER_KEY }}
+        run: eb create ${{ github.event.inputs.aws-env }} --instance-types ${{ vars.AWS_EB_ENV_INSTANCE_TYPES }} --cname ${{ github.event.inputs.aws-env }} --envvars  NEXT_PUBLIC_FLAGSMITH_CLIENT_KEY=${{ secrets.FLAGSMITH_CLIENT_KEY }}
 
       - name: Deploy to AWS Elastic Beanstalk existing environment
         if: steps.get-eb-env-name.outputs.aws_env == github.event.inputs.aws-env && steps.get-eb-env-status.outputs.aws_env_status != 'Terminated'
