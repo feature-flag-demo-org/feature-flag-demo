@@ -1,13 +1,7 @@
+import { PokemonData } from '@/types';
 import axios from 'axios';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-
-interface PokemonData {
-  name: string;
-  sprites: {
-    front_default: string;
-  };
-}
 
 interface PokemonCardProps {
   id: number;

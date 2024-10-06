@@ -1,5 +1,6 @@
 'use client';
 import PokemonCard from '@/components/PokemonCard';
+import PokemonOfTheDay from '@/components/PokemonOfTheDay';
 import UserManagement from '@/components/UserManagement';
 import { useFeatureFlags } from '@/context/FeatureFlagContext';
 import { getRandomPokemonIds } from '@/utils/getRandomPokemonIds';
@@ -7,7 +8,7 @@ import { useState } from 'react';
 
 export default function Home() {
   const {
-    flags: { isTestEnabled, isUserManagementEnabled },
+    flags: { isUserManagementEnabled, isPokemonOfTheDayEnabled },
   } = useFeatureFlags();
   const [pokemonIds] = useState<number[]>(getRandomPokemonIds(3));
 
@@ -18,10 +19,12 @@ export default function Home() {
           <UserManagement />
         </section>
       )}
-      {isTestEnabled && <p className="text-center text-xl text-green-500 mt-4">Test feature is enabled!</p>}
-
       <h1 className="text-4xl font-bold mb-8 text-center">Pokémon Feature Flag Demo</h1>
-
+      {isPokemonOfTheDayEnabled && (
+        <section className="my-8">
+          <PokemonOfTheDay />
+        </section>
+      )}
       <div className="flex flex-wrap justify-center gap-4">
         {pokemonIds.map((id) => (
           <PokemonCard key={id} id={id} />
