@@ -1,5 +1,11 @@
 # feature-flag-demo-next
 
+## 0.1.3
+
+### Patch Changes
+
+- 4b13283: Updated feature enabled text
+
 ## 0.1.2
 
 ### Patch Changes
