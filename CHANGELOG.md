@@ -1,5 +1,11 @@
 # feature-flag-demo-next
 
+## 0.1.4
+
+### Patch Changes
+
+- d5d568c: Updated feature enabled text
+
 ## 0.1.3
 
 ### Patch Changes
