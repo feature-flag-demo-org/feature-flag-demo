@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  create-version-pr-or-release:
+  create-release:
     runs-on: ubuntu-latest
     outputs:
       should_deploy: ${{ steps.changesets.outputs.hasChangesets == 'false' }}
@@ -44,8 +44,8 @@ jobs:
         run: echo "version=${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}" >> $GITHUB_OUTPUT
 
   run-ci:
-    needs: create-version-pr-or-release
-    if: needs.create-version-pr-or-release.outputs.should_deploy == 'true'
+    needs: create-release
+    if: needs.create-release.outputs.should_deploy == 'true'
     uses: ./.github/workflows/test.yaml
     secrets: inherit
 

@@ -99,13 +99,8 @@ jobs:
         run: eb create ${{ inputs.aws-env }} --instance-types ${{ vars.AWS_EB_ENV_INSTANCE_TYPES }} --cname ${{ inputs.aws-env }} --envvars  NEXT_PUBLIC_FLAGSMITH_CLIENT_KEY=${{ secrets.FLAGSMITH_CLIENT_KEY }}
 
       - name: Deploy to AWS Elastic Beanstalk existing environment
-        # if: steps.get-eb-env-name.outputs.aws_env == inputs.aws-env && steps.get-eb-env-status.outputs.aws_env_status != 'Terminated'
-        run: |
-          echo AWS Environment Input ${{ inputs.aws-env }}
-          echo AWS Environment Elastic ${{ steps.get-eb-env-name.outputs.aws_env }}
-          echo AWS Environment Status ${{ steps.get-eb-env-status.outputs.aws_env_status }}
-          echo Are equal ${{ steps.get-eb-env-name.outputs.aws_env == inputs.aws-env }}
-          eb deploy ${{ steps.get-eb-env-name.outputs.aws_env }}
+        if: steps.get-eb-env-name.outputs.aws_env == inputs.aws-env && steps.get-eb-env-status.outputs.aws_env_status != 'Terminated'
+        run: eb deploy ${{ steps.get-eb-env-name.outputs.aws_env }}
 
       - name: Get AWS Elastic Beanstalk environment cname
         id: get-eb-env-cname
