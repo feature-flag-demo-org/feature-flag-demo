@@ -45,7 +45,7 @@ jobs:
       url: 'http://${{ steps.get-eb-env-cname.outputs.aws_env_cname }}'
     steps:
       - name: Prevent deployment to Production from different environments
-        if: ${{  github.event.inputs.aws-env == vars.AWS_EB_PROD_ENV && github.event.inputs.github-env != 'production' }}
+        if: ${{  github.event.inputs.aws-env == vars.AWS_EB_PROD_ENV && github.event.inputs.github-env != 'prod' }}
         run: |
           echo "::error::Cannot deploy to Production from a non production environment"
           exit 1
