@@ -1,5 +1,11 @@
 # feature-flag-demo-next
 
+## 0.1.6
+
+### Patch Changes
+
+- d587bde: Updated feature text
+
 ## 0.1.5
 
 ### Patch Changes
