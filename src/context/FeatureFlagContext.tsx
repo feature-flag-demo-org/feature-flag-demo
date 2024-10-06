@@ -10,6 +10,7 @@ type FeatureFlagContext = {
 
 type FeatureFlagsState = {
   isTestEnabled: boolean;
+  isShinyPokemonEnabled?: boolean;
 };
 
 type TraitsState = Record<string, string | number | boolean | null>;
@@ -48,6 +49,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ childr
             setFlags((currentState) => ({
               ...currentState,
               isTestEnabled: flagsmith.hasFeature('test_feature'),
+              isShinyPokemonEnabled: flagsmith.hasFeature('release_shiny_pokemon'),
             }));
             setTraits((currentState) => ({
               ...currentState,
