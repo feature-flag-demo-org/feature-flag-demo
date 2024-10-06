@@ -1,4 +1,4 @@
-name: CI
+name: Continuous Integration
 
 on:
   pull_request:
@@ -10,6 +10,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  run-tests:
+  run-ci:
     uses: ./.github/workflows/test.yaml
     secrets: inherit

@@ -6,7 +6,7 @@ on:
 env:
   NEXT_PUBLIC_FLAGSMITH_CLIENT_KEY: ${{ secrets.FLAGSMITH_CLIENT_KEY }}
 jobs:
-  test-and-build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
