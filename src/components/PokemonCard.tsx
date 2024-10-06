@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
 
 interface PokemonData {
   name: string;
@@ -39,7 +40,13 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ id }) => {
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center">
-      <img src={pokemon.sprites.front_default} alt={pokemon.name} className="w-32 h-32 object-contain" />
+      <Image
+        src={pokemon.sprites.front_default}
+        alt={pokemon.name}
+        width={128}
+        height={128}
+        style={{ objectFit: 'contain' }}
+      />
       <h2 className="text-xl text-gray-900 font-semibold mt-2 capitalize">{pokemon.name}</h2>
     </div>
   );
