@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {isTestEnabled && <p className="text-center text-xl text-green-500 mt-4">Test feature is enabled!!!!</p>}
+      {isTestEnabled && <p className="text-center text-xl text-green-500 mt-4">Test feature is enabled!</p>}
 
       <h1 className="text-4xl font-bold mb-8 text-center">Pokémon Feature Flag Demo</h1>
 
