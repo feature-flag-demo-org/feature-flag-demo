@@ -41,11 +41,11 @@ jobs:
       pull-requests: write
       id-token: write
     environment:
-      name: ${{ github.event.inputs.github-env }}
+      name: ${{ inputs.github-env }}
       url: 'http://${{ steps.get-eb-env-cname.outputs.aws_env_cname }}'
     steps:
       - name: Prevent deployment to Production from different environments
-        if: ${{  github.event.inputs.aws-env == vars.AWS_EB_PROD_ENV && github.event.inputs.github-env != 'prod' }}
+        if: ${{  inputs.aws-env == vars.AWS_EB_PROD_ENV && inputs.github-env != 'prod' }}
         run: |
           echo "::error::Cannot deploy to Production from a non production environment"
           exit 1
@@ -85,35 +85,35 @@ jobs:
 
       - name: Get AWS Elastic Beanstalk environment name
         id: get-eb-env-name
-        run: echo "aws_env=$(aws elasticbeanstalk describe-environments --application-name ${{ vars.AWS_EB_APP_NAME }} --environment-names ${{ github.event.inputs.aws-env }} --query "Environments[0].EnvironmentName" --output text)" >> $GITHUB_OUTPUT
+        run: echo "aws_env=$(aws elasticbeanstalk describe-environments --application-name ${{ vars.AWS_EB_APP_NAME }} --environment-names ${{ inputs.aws-env }} --query "Environments[0].EnvironmentName" --output text)" >> $GITHUB_OUTPUT
 
       - name: Get AWS Elastic Beanstalk environment status
         id: get-eb-env-status
-        run: echo "aws_env_status=$(aws elasticbeanstalk describe-environments --application-name ${{ vars.AWS_EB_APP_NAME }} --environment-names ${{ github.event.inputs.aws-env }} --query "Environments[0].Status" --output text)" >> $GITHUB_OUTPUT
+        run: echo "aws_env_status=$(aws elasticbeanstalk describe-environments --application-name ${{ vars.AWS_EB_APP_NAME }} --environment-names ${{ inputs.aws-env }} --query "Environments[0].Status" --output text)" >> $GITHUB_OUTPUT
 
       - name: Initialize AWS Elastic Beanstalk
         run: eb init ${{ vars.AWS_EB_APP_NAME }} --platform "${{ vars.AWS_EB_PLATFORM }}" --region ${{ vars.AWS_REGION }}
 
       - name: Create AWS Elastic Beanstalk environment
         if: steps.get-eb-env-name.outputs.aws_env == 'None' || steps.get-eb-env-status.outputs.aws_env_status == 'Terminated'
-        run: eb create ${{ github.event.inputs.aws-env }} --instance-types ${{ vars.AWS_EB_ENV_INSTANCE_TYPES }} --cname ${{ github.event.inputs.aws-env }} --envvars  NEXT_PUBLIC_FLAGSMITH_CLIENT_KEY=${{ secrets.FLAGSMITH_CLIENT_KEY }}
+        run: eb create ${{ inputs.aws-env }} --instance-types ${{ vars.AWS_EB_ENV_INSTANCE_TYPES }} --cname ${{ inputs.aws-env }} --envvars  NEXT_PUBLIC_FLAGSMITH_CLIENT_KEY=${{ secrets.FLAGSMITH_CLIENT_KEY }}
 
       - name: Deploy to AWS Elastic Beanstalk existing environment
-        # if: steps.get-eb-env-name.outputs.aws_env == github.event.inputs.aws-env && steps.get-eb-env-status.outputs.aws_env_status != 'Terminated'
+        # if: steps.get-eb-env-name.outputs.aws_env == inputs.aws-env && steps.get-eb-env-status.outputs.aws_env_status != 'Terminated'
         run: |
-          echo AWS Environment Input ${{ github.event.inputs.aws-env }}
+          echo AWS Environment Input ${{ inputs.aws-env }}
           echo AWS Environment Elastic ${{ steps.get-eb-env-name.outputs.aws_env }}
           echo AWS Environment Status ${{ steps.get-eb-env-status.outputs.aws_env_status }}
-          echo Are equal ${{ steps.get-eb-env-name.outputs.aws_env == github.event.inputs.aws-env }}
+          echo Are equal ${{ steps.get-eb-env-name.outputs.aws_env == inputs.aws-env }}
           eb deploy ${{ steps.get-eb-env-name.outputs.aws_env }}
 
       - name: Get AWS Elastic Beanstalk environment cname
         id: get-eb-env-cname
-        run: echo "aws_env_cname=$(aws elasticbeanstalk describe-environments --application-name ${{ vars.AWS_EB_APP_NAME }} --environment-names ${{ github.event.inputs.aws-env }} --query "Environments[0].CNAME" --output text)" >> $GITHUB_OUTPUT
+        run: echo "aws_env_cname=$(aws elasticbeanstalk describe-environments --application-name ${{ vars.AWS_EB_APP_NAME }} --environment-names ${{ inputs.aws-env }} --query "Environments[0].CNAME" --output text)" >> $GITHUB_OUTPUT
 
       - name: Abort deployment if Cancelled
         if: ${{ cancelled() && steps.install-eb-cli.conclusion == 'success' }}
         run: |
-          eb abort ${{ github.event.inputs.aws-env }}
+          eb abort ${{ inputs.aws-env }}
           echo "::error::Deployment was cancelled"
           exit 1
