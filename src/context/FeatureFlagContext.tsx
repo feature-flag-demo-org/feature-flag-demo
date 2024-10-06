@@ -5,20 +5,25 @@ type FeatureFlagContext = {
   isLoading: boolean;
   flags: FeatureFlagsState;
   traits: TraitsState;
-  identifyUser: (userId: string) => Promise<void>;
+  identifyUser: (userId: string, traits: Partial<TraitsState>) => Promise<void>;
 };
 
 type FeatureFlagsState = {
+  isReady: boolean;
+  isUserManagementEnabled: boolean;
   isTestEnabled: boolean;
 };
 
 type TraitsState = Record<string, string | number | boolean | null>;
 
 const traitsInitialState: TraitsState = {
-  favoriteColor: null,
+  favorite_color: null,
+  user_group: null,
 };
 
 const featureFlagInitialState: FeatureFlagsState = {
+  isReady: false,
+  isUserManagementEnabled: false,
   isTestEnabled: false,
 };
 
@@ -44,15 +49,22 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ childr
       try {
         await flagsmith.init({
           environmentID: environmentId,
-          onChange: () => {
-            setFlags((currentState) => ({
-              ...currentState,
-              isTestEnabled: flagsmith.hasFeature('test_feature'),
-            }));
-            setTraits((currentState) => ({
-              ...currentState,
-              favoriteColor: flagsmith.getTrait('favourite_color'),
-            }));
+          onChange: (oldFlags, params) => {
+            if (params.flagsChanged) {
+              setFlags((currentState) => ({
+                ...currentState,
+                isReady: true,
+                isUserManagementEnabled: flagsmith.hasFeature('enable_user_management'),
+                isTestEnabled: flagsmith.hasFeature('test_feature'),
+              }));
+            }
+            if (params.traitsChanged) {
+              setTraits((currentState) => ({
+                ...currentState,
+                favorite_color: flagsmith.getTrait('favorite_color'),
+                user_group: flagsmith.getTrait('user_group'),
+              }));
+            }
           },
         });
         setIsLoading(false);
@@ -65,12 +77,18 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ childr
     initFlagsmith();
   }, [environmentId]);
 
-  const identifyUser = useCallback(async (userId: string) => {
+  const identifyUser = useCallback(async (userId: string, updatedTraits: Partial<TraitsState> = {}) => {
     setIsLoading(true);
     try {
       await flagsmith.setContext({
         identity: {
           identifier: userId,
+          traits: Object.entries(updatedTraits).reduce((acc, [key, value]) => {
+            if (value !== undefined) {
+              acc[key] = { value };
+            }
+            return acc;
+          }, {} as Record<string, { value: string | number | boolean | null }>),
         },
       });
     } catch (error) {
