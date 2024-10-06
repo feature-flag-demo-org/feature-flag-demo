@@ -1,5 +1,11 @@
 # feature-flag-demo-next
 
+## 0.1.7
+
+### Patch Changes
+
+- 059a562: Updated feature text
+
 ## 0.1.6
 
 ### Patch Changes
