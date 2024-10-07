@@ -1,6 +1,13 @@
 import { useFeatureFlags } from '@/context/FeatureFlagContext';
 import React, { useEffect, useState } from 'react';
 
+const users = [
+  { id: '1', name: 'User 1' },
+  { id: '2', name: 'User 2' },
+  { id: '3', name: 'User 3' },
+  { id: '4', name: 'User 4' },
+];
+
 const traitsConfig: Record<string, string[] | number[] | boolean[] | null> = {
   user_group: ['internal', 'beta', 'external'],
   favorite_color: ['red', 'green', 'blue'],
@@ -69,8 +76,12 @@ const UserManagement: React.FC = () => {
             onChange={handleUserChange}
             className="border rounded px-2 py-1"
           >
-            <option value="1">User 1</option>
-            <option value="2">User 2</option>
+            <option value="">Select User</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.name}
+              </option>
+            ))}
           </select>
         </div>
         {Object.entries(traitsConfig).map(([trait, possibleValues]) => (
