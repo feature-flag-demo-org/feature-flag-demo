@@ -23,7 +23,7 @@ export default function Home() {
           <UserManagement />
         </section>
       )}
-      <h1 className="text-4xl font-bold mb-8 text-center">Pokémon Feature Flag Demo</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">Pokémon Hub</h1>
       {isPokemonOfTheDayEnabled && (
         <section className="my-8">
           <PokemonOfTheDay />

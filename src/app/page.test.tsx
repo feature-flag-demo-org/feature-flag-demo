@@ -9,19 +9,19 @@ jest.mock('../context/FeatureFlagContext', () => ({
   useFeatureFlags: () => ({
     isLoading: false,
     flags: {
-      isTestEnabled: false,
+      isReady: true,
     },
     traits: {
-      favoriteColor: null,
+      user_group: 'internal',
     },
     identifyUser: jest.fn().mockResolvedValue(undefined),
   }),
 }));
 
 describe('App Component', () => {
-  it('renders the title correctly', () => {
+  it('renders the title correctly', async () => {
     render(<Home />);
-    const titleElement = screen.getByText(/Pokémon Feature Flag Demo/i);
+    const titleElement = await screen.findByText(/Pokémon Hub/i);
     expect(titleElement).toBeInTheDocument();
   });
 });
