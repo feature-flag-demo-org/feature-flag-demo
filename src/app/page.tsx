@@ -9,10 +9,12 @@ import { useState } from 'react';
 
 export default function Home() {
   const {
-    flags: { isUserManagementEnabled, isPokemonOfTheDayEnabled },
+    flags: { isReady, isUserManagementEnabled, isPokemonOfTheDayEnabled },
     traits,
   } = useFeatureFlags();
   const [pokemonIds] = useState<number[]>(getRandomPokemonIds(3));
+
+  if (!isReady) return null;
 
   return (
     <div className="container mx-auto px-4 py-8">
