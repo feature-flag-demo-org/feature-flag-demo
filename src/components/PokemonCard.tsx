@@ -1,3 +1,4 @@
+import { useFeatureFlags } from '@/context/FeatureFlagContext';
 import { PokemonData } from '@/types';
 import axios from 'axios';
 import Image from 'next/image';
@@ -8,6 +9,9 @@ interface PokemonCardProps {
 }
 
 const PokemonCard: React.FC<PokemonCardProps> = ({ id }) => {
+  const {
+    flags: { isPokemonSpriteEnabled },
+  } = useFeatureFlags();
   const [pokemon, setPokemon] = useState<PokemonData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,13 +38,15 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ id }) => {
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center">
-      <Image
-        src={pokemon.sprites.front_default}
-        alt={pokemon.name}
-        width={128}
-        height={128}
-        style={{ objectFit: 'contain' }}
-      />
+      {isPokemonSpriteEnabled && (
+        <Image
+          src={pokemon.sprites.front_default}
+          alt={pokemon.name}
+          width={128}
+          height={128}
+          style={{ objectFit: 'contain' }}
+        />
+      )}
       <h2 className="text-xl text-gray-900 font-semibold mt-2 capitalize">{pokemon.name}</h2>
     </div>
   );
