@@ -14,7 +14,8 @@ type FeatureFlagsState = {
   isPokemonOfTheDayEnabled?: boolean;
 };
 
-type TraitsState = Record<string, string | number | boolean | null>;
+type UserTraits = 'favorite_color' | 'user_group';
+type TraitsState = Record<UserTraits, string | number | boolean | null>;
 
 const traitsInitialState: TraitsState = {
   favorite_color: null,

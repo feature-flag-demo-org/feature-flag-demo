@@ -1,6 +1,7 @@
 'use client';
 import PokemonCard from '@/components/PokemonCard';
 import PokemonOfTheDay from '@/components/PokemonOfTheDay';
+import PokemonTrivia from '@/components/PokemonTrivia';
 import UserManagement from '@/components/UserManagement';
 import { useFeatureFlags } from '@/context/FeatureFlagContext';
 import { getRandomPokemonIds } from '@/utils/getRandomPokemonIds';
@@ -9,6 +10,7 @@ import { useState } from 'react';
 export default function Home() {
   const {
     flags: { isUserManagementEnabled, isPokemonOfTheDayEnabled },
+    traits,
   } = useFeatureFlags();
   const [pokemonIds] = useState<number[]>(getRandomPokemonIds(3));
 
@@ -23,6 +25,11 @@ export default function Home() {
       {isPokemonOfTheDayEnabled && (
         <section className="my-8">
           <PokemonOfTheDay />
+        </section>
+      )}
+      {traits.user_group == 'beta' && (
+        <section className="my-8">
+          <PokemonTrivia />
         </section>
       )}
       <div className="flex flex-wrap justify-center gap-4">
