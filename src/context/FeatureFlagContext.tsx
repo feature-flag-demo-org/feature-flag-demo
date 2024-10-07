@@ -1,3 +1,4 @@
+import { logger } from '@/logger';
 import flagsmith from 'flagsmith';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
@@ -13,7 +14,8 @@ type FeatureFlagsState = {
   isUserManagementEnabled: boolean;
   isPokemonOfTheDayEnabled?: boolean;
   isPokemonSpriteEnabled?: boolean;
-  pokemonCardLayout?: 'compact' | 'detailed';
+  pokemonCardLayout: 'compact' | 'detailed';
+  logLevel: 'error' | 'warn' | 'info' | 'debug';
 };
 
 type UserTraits = 'favorite_color' | 'user_group';
@@ -30,6 +32,7 @@ const featureFlagInitialState: FeatureFlagsState = {
   isPokemonOfTheDayEnabled: false,
   isPokemonSpriteEnabled: true,
   pokemonCardLayout: 'compact',
+  logLevel: 'info',
 };
 
 const FeatureFlagContext = createContext<FeatureFlagContext | undefined>(undefined);
@@ -56,6 +59,9 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ childr
           environmentID: environmentId,
           onChange: (oldFlags, params) => {
             if (params.flagsChanged) {
+              const logLevel = flagsmith.getValue<FeatureFlagsState['logLevel']>('operational_log_level', {
+                fallback: 'info',
+              });
               setFlags((currentState) => ({
                 ...currentState,
                 isReady: true,
@@ -63,7 +69,11 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ childr
                 isPokemonOfTheDayEnabled: flagsmith.hasFeature('experimental_pokemon_of_the_day'),
                 isPokemonSpriteEnabled: !flagsmith.hasFeature('kill_pokemon_sprite'),
                 pokemonCardLayout: flagsmith.getValue('experimental_pokemon_card_layout', { fallback: 'compact' }),
+                logLevel,
               }));
+
+              // Set log level
+              logger.setLevel(logLevel);
             }
             if (params.traitsChanged) {
               setTraits((currentState) => ({

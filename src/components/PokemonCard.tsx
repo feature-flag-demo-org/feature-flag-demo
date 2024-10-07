@@ -1,4 +1,5 @@
 import { useFeatureFlags } from '@/context/FeatureFlagContext';
+import { logger } from '@/logger';
 import { PokemonData } from '@/types';
 import axios from 'axios';
 import Image from 'next/image';
@@ -18,12 +19,14 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ id }) => {
 
   useEffect(() => {
     const fetchPokemon = async () => {
+      logger.info(`Fetching Pokemon with id: ${id}`);
       try {
         const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
         setPokemon(response.data);
         setIsLoading(false);
+        logger.debug('Pokemon data fetched:', response.data);
       } catch (err) {
-        console.error('Error fetching Pokemon:', err);
+        logger.error(`Error fetching Pokemon with id ${id}:`, err);
         setError('Failed to load Pokémon');
         setIsLoading(false);
       }
@@ -35,6 +38,8 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ id }) => {
   if (isLoading) return <div className="text-center">Loading...</div>;
   if (error) return <div className="text-center text-red-500">{error}</div>;
   if (!pokemon) return null;
+
+  logger.debug(`Rendering Pokemon card for ${pokemon.name}`, { layout: pokemonCardLayout });
 
   if (pokemonCardLayout === 'detailed') {
     return (
