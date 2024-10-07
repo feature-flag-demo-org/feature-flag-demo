@@ -12,6 +12,7 @@ type FeatureFlagsState = {
   isReady: boolean;
   isUserManagementEnabled: boolean;
   isPokemonOfTheDayEnabled?: boolean;
+  isPokemonSpriteEnabled?: boolean;
 };
 
 type UserTraits = 'favorite_color' | 'user_group';
@@ -26,6 +27,7 @@ const featureFlagInitialState: FeatureFlagsState = {
   isReady: false,
   isUserManagementEnabled: false,
   isPokemonOfTheDayEnabled: false,
+  isPokemonSpriteEnabled: true,
 };
 
 const FeatureFlagContext = createContext<FeatureFlagContext | undefined>(undefined);
@@ -57,6 +59,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ childr
                 isReady: true,
                 isUserManagementEnabled: flagsmith.hasFeature('enable_user_management'),
                 isPokemonOfTheDayEnabled: flagsmith.hasFeature('experimental_pokemon_of_the_day'),
+                isPokemonSpriteEnabled: !flagsmith.hasFeature('kill_pokemon_sprite'),
               }));
             }
             if (params.traitsChanged) {
