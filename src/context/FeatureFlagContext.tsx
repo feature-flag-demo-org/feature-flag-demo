@@ -11,7 +11,7 @@ type FeatureFlagContext = {
 type FeatureFlagsState = {
   isReady: boolean;
   isUserManagementEnabled: boolean;
-  isTestEnabled: boolean;
+  isPokemonOfTheDayEnabled?: boolean;
 };
 
 type TraitsState = Record<string, string | number | boolean | null>;
@@ -24,7 +24,7 @@ const traitsInitialState: TraitsState = {
 const featureFlagInitialState: FeatureFlagsState = {
   isReady: false,
   isUserManagementEnabled: false,
-  isTestEnabled: false,
+  isPokemonOfTheDayEnabled: false,
 };
 
 const FeatureFlagContext = createContext<FeatureFlagContext | undefined>(undefined);
@@ -55,7 +55,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ childr
                 ...currentState,
                 isReady: true,
                 isUserManagementEnabled: flagsmith.hasFeature('enable_user_management'),
-                isTestEnabled: flagsmith.hasFeature('test_feature'),
+                isPokemonOfTheDayEnabled: flagsmith.hasFeature('experimental_pokemon_of_the_day'),
               }));
             }
             if (params.traitsChanged) {
