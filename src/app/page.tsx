@@ -1,5 +1,6 @@
 'use client';
 import PokemonCard from '@/components/PokemonCard';
+import PokemonCardShiny from '@/components/PokemonCardShiny';
 import PokemonOfTheDay from '@/components/PokemonOfTheDay';
 import PokemonTrivia from '@/components/PokemonTrivia';
 import UserManagement from '@/components/UserManagement';
@@ -9,7 +10,7 @@ import { useState } from 'react';
 
 export default function Home() {
   const {
-    flags: { isReady, isUserManagementEnabled, isPokemonOfTheDayEnabled },
+    flags: { isReady, isUserManagementEnabled, isPokemonOfTheDayEnabled, isShinyPokemonEnabled },
     traits,
   } = useFeatureFlags();
   const [pokemonIds] = useState<number[]>(getRandomPokemonIds(3));
@@ -35,9 +36,9 @@ export default function Home() {
         </section>
       )}
       <div className="flex flex-wrap justify-center gap-4">
-        {pokemonIds.map((id) => (
-          <PokemonCard key={id} id={id} />
-        ))}
+        {pokemonIds.map((id) =>
+          isShinyPokemonEnabled ? <PokemonCardShiny key={id} id={id} /> : <PokemonCard key={id} id={id} />
+        )}
       </div>
     </div>
   );

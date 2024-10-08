@@ -14,6 +14,7 @@ type FeatureFlagsState = {
   isUserManagementEnabled: boolean;
   isPokemonOfTheDayEnabled?: boolean;
   isPokemonSpriteEnabled?: boolean;
+  isShinyPokemonEnabled?: boolean;
   pokemonCardLayout: 'compact' | 'detailed';
   logLevel: 'error' | 'warn' | 'info' | 'debug';
 };
@@ -31,6 +32,7 @@ const featureFlagInitialState: FeatureFlagsState = {
   isUserManagementEnabled: false,
   isPokemonOfTheDayEnabled: false,
   isPokemonSpriteEnabled: true,
+  isShinyPokemonEnabled: false,
   pokemonCardLayout: 'compact',
   logLevel: 'info',
 };
@@ -68,6 +70,7 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ childr
                 isUserManagementEnabled: flagsmith.hasFeature('enable_user_management'),
                 isPokemonOfTheDayEnabled: flagsmith.hasFeature('experimental_pokemon_of_the_day'),
                 isPokemonSpriteEnabled: !flagsmith.hasFeature('kill_pokemon_sprite'),
+                isShinyPokemonEnabled: flagsmith.hasFeature('release_shiny_pokemon'),
                 pokemonCardLayout: flagsmith.getValue('experimental_pokemon_card_layout', { fallback: 'compact' }),
                 logLevel,
               }));
